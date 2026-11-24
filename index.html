@@ -327,7 +327,22 @@ details[open] .plus{transform:rotate(45deg)}
 <h2 style="margin:0;font-weight:800;font-size:44px;line-height:1.1;letter-spacing:-0.02em;text-wrap:balance">Your story is worth reading. Start yours today.</h2>
 <p style="margin:0;font-size:19px;color:#E4F4EA">Create a profile in about ten minutes. The first 30 days are free.</p>
 </div>
-<a href="#top" style="padding:18px 34px;background:#F4C542;color:#14391F;font-weight:700;font-size:18px;border-radius:999px">[YOUR SIGN-UP LINK]</a>
+<form id="signup" novalidate style="flex:1 1 460px;min-width:0;box-sizing:border-box;background:#FFFCEE;color:#14391F;border-radius:24px;padding:28px;display:flex;flex-wrap:wrap;gap:16px;box-shadow:0 22px 40px -22px rgba(0,0,0,0.45)">
+<h3 style="flex:1 1 100%;margin:0;font-size:24px;font-weight:700;color:#14532D">Create your free profile</h3>
+<div style="flex:1 1 220px;min-width:0"><label for="role" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">I am registering as</label><select id="role" name="role" required style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"><option value="Bride (woman)">Bride (woman)</option><option value="Groom (man)">Groom (man)</option><option value="Parent or guardian">Parent or guardian</option></select></div>
+<div style="flex:1 1 220px;min-width:0"><label for="name" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Full name</label><input id="name" name="name" type="text" required autocomplete="name" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
+<div style="flex:1 1 220px;min-width:0"><label for="age" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Age</label><input id="age" name="age" type="number" min="18" max="70" required inputmode="numeric" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
+<div style="flex:1 1 220px;min-width:0"><label for="profession" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Profession</label><select id="profession" name="profession" required style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"><option value="CA">CA</option><option value="CMA">CMA</option><option value="CS">CS</option><option value="Other">Other</option></select></div>
+<div style="flex:1 1 220px;min-width:0"><label for="stage" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Stage</label><select id="stage" name="stage" required style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"><option value="Qualified">Qualified</option><option value="Final">Final</option><option value="Intermediate">Intermediate</option><option value="Foundation">Foundation</option><option value="Not applicable">Not applicable</option></select></div>
+<div style="flex:1 1 220px;min-width:0"><label for="city" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">City</label><input id="city" name="city" type="text" required autocomplete="address-level2" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
+<div style="flex:1 1 220px;min-width:0"><label for="whatsapp" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">WhatsApp number</label><input id="whatsapp" name="whatsapp" type="tel" required autocomplete="tel" inputmode="tel" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
+<div style="flex:1 1 220px;min-width:0"><label for="email" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Email (optional)</label><input id="email" name="email" type="email" autocomplete="email" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
+<div style="flex:1 1 100%"><label for="about" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">A few lines about you</label><textarea id="about" name="about" rows="3" maxlength="500" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px;resize:vertical"></textarea></div>
+<div style="position:absolute;left:-9999px" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+<label style="flex:1 1 100%;display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45"><input id="consent" name="consent" type="checkbox" required style="width:22px;height:22px;margin:0;flex:none"><span>I agree that MarryCAIndia.com may store these details and contact me on WhatsApp or email about my profile.</span></label>
+<button id="send" type="submit" style="flex:1 1 100%;min-height:52px;padding:14px;font:inherit;font-size:17px;font-weight:700;color:#14391F;background:#F4C542;border:0;border-radius:999px;cursor:pointer">Start free for 30 days</button>
+<p id="msg" role="status" aria-live="polite" style="flex:1 1 100%;margin:0;font-size:15px;font-weight:600;min-height:22px"></p>
+</form>
 </div>
 </section>
 
@@ -338,5 +353,23 @@ details[open] .plus{transform:rotate(45deg)}
 
 </div>
 
+<script>
+var SHEET_URL="https://script.google.com/macros/s/AKfycbx9fKvga31SzCbJziKa7ZGS0iEW-NHsy0utJVKXBKMhwIzWP7A39GCdZo6Vahr0KQn4wA/exec";
+(function(){
+var form=document.getElementById('signup'),msg=document.getElementById('msg'),btn=document.getElementById('send');
+form.addEventListener('submit',function(e){
+e.preventDefault();
+msg.style.color='#B3261E';
+if(!form.checkValidity()){form.reportValidity();msg.textContent='Please fill in the highlighted fields and tick the box.';return;}
+if(!SHEET_URL){msg.textContent='Sign-up is not connected yet. Please try again soon.';return;}
+btn.disabled=true;btn.textContent='Sending...';
+var data=new URLSearchParams(new FormData(form));
+fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:data}).then(function(){
+form.reset();msg.style.color='#14532D';msg.textContent='Thank you! Your profile request is received. We will contact you on WhatsApp soon.';
+btn.disabled=false;btn.textContent='Start free for 30 days';
+}).catch(function(){msg.textContent='Could not send. Check your internet and try again.';btn.disabled=false;btn.textContent='Start free for 30 days';});
+});
+})();
+</script>
 </body>
 </html>
