@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -136,33 +137,56 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 </style>
 </head>
 <body>
-<div id="gate" style="position:fixed;inset:0;z-index:9999;background:#FFF8E1;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,sans-serif;color:#14391F;overflow:auto"><div style="width:100%;max-width:420px;text-align:center"><div style="font-size:48px">💍</div><h1 style="font-size:26px;margin:8px 0 6px;color:#14532D">MarryCAIndia</h1><p id="gp" style="font-size:16px;line-height:1.5;margin:0 0 18px">Checking your login...</p><div id="gf" style="display:none;text-align:left"><label style="font-size:14px;font-weight:600">Email</label><input id="ge" type="email" autocomplete="email" placeholder="Your registered email" style="width:100%;box-sizing:border-box;min-height:52px;font-size:17px;padding:0 14px;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:4px"><div id="gcw" style="display:none;margin-top:10px"><label style="font-size:14px;font-weight:600">6-digit code from email</label><input id="gc" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" style="width:100%;box-sizing:border-box;min-height:56px;font-size:28px;letter-spacing:8px;text-align:center;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:4px"></div><div id="gpw" style="margin-top:10px"><label id="gpl" style="font-size:14px;font-weight:600">Password</label><input id="gp2" type="password" autocomplete="current-password" style="width:100%;box-sizing:border-box;min-height:52px;font-size:17px;padding:0 14px;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:4px"><label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:14px"><input id="gs" type="checkbox" style="width:20px;height:20px"> Show password</label></div><button id="gb" type="button" style="width:100%;margin-top:14px;min-height:52px;font-size:17px;font-weight:700;color:#14391F;background:#F4C542;border:0;border-radius:999px;cursor:pointer">Log in</button><p id="gm" style="margin:10px 0 0;font-size:15px;font-weight:600;min-height:22px;color:#B3261E;text-align:center"></p><p style="margin:10px 0 0;font-size:14px;text-align:center"><a href="#" id="gfg" style="color:#14532D">Forgot password?</a></p><p style="margin:10px 0 0;font-size:14px;text-align:center"><a href="index.html#join" style="color:#14532D">New here? Register free</a></p></div></div></div>
+<div id="gate" style="position:fixed;inset:0;z-index:9999;background:#FFF8E1;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,sans-serif;color:#14391F;overflow:auto"><div style="width:100%;max-width:420px;text-align:center"><div style="font-size:48px">💍</div><h1 style="font-size:26px;margin:8px 0 6px;color:#14532D">MarryCAIndia</h1><p id="gp" style="font-size:16px;line-height:1.5;margin:0 0 18px">Checking your login...</p><div id="gf" style="display:none;text-align:left"><div id="gew"><label style="font-size:14px;font-weight:600">Email</label><input id="ge" type="email" autocomplete="email" placeholder="Your registered email" style="width:100%;box-sizing:border-box;min-height:52px;font-size:17px;padding:0 14px;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:4px"></div><div id="gcw" style="display:none;margin-top:10px"><label style="font-size:14px;font-weight:600">Code from your email</label><input id="gc" inputmode="numeric" maxlength="10" autocomplete="one-time-code" placeholder="Code" style="width:100%;box-sizing:border-box;min-height:56px;font-size:26px;letter-spacing:6px;text-align:center;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:4px"></div><div id="gpw" style="margin-top:10px"><label id="gpl" style="font-size:14px;font-weight:600">Password</label><input id="gp2" type="password" autocomplete="current-password" style="width:100%;box-sizing:border-box;min-height:52px;font-size:17px;padding:0 14px;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:4px"><label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:14px"><input id="gs" type="checkbox" style="width:20px;height:20px"> Show password</label></div><button id="gb" type="button" style="width:100%;margin-top:14px;min-height:52px;font-size:17px;font-weight:700;color:#14391F;background:#F4C542;border:0;border-radius:999px;cursor:pointer">Log in</button><p id="gm" style="margin:10px 0 0;font-size:15px;font-weight:600;min-height:22px;color:#B3261E;text-align:center"></p><p style="margin:10px 0 0;font-size:14px;text-align:center"><a href="#" id="gfg" style="color:#14532D">Forgot password?</a></p><p style="margin:10px 0 0;font-size:14px;text-align:center"><a href="index.html#join" style="color:#14532D">New here? Register free</a></p></div></div></div>
 <script>
 (function(){
-var U="https://script.google.com/macros/s/AKfycbyQQzHtBAV-ci0Qof2AETc-B2ewUOwyh2_zbUAksWD6mwhajsUky2ong57PHBZt4UCyrg/exec",g=function(i){return document.getElementById(i);},mode='login',sent=false;
+var g=function(i){return document.getElementById(i);},mode='login',sb=null,email='',recovering=/type=recovery/.test(location.hash),uid=null,last='',tm=null;
 var RX=/^(?=.*[A-Za-z])(?=.*[0-9]).{8,64}$/;
-function api(q){return fetch(U+'?'+new URLSearchParams(q)).then(function(r){return r.json();});}
-function open_(){var e=g('gate');if(e)e.remove();}
+window.MCI_AUTH=true;
 function say(t,ok){var m=g('gm');m.style.color=ok?'#14532D':'#B3261E';m.textContent=t;}
-function setMode(m){mode=m;sent=false;g('ge').readOnly=false;g('gcw').style.display='none';g('gpw').style.display='block';
+if(!(window.supabase&&window.supabase.createClient)){g('gp').textContent='Could not load. Please check your internet and refresh.';return;}
+sb=window.supabase.createClient("https://xfrknlyzvhxobgdkzxjq.supabase.co","sb_publishable_t56bJBI5xkFtajxydTiN4w_qlu-4nx3",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+window.mciSB=sb;
+function setMode(m){mode=m;g('gf').style.display='block';g('gew').style.display='block';g('gcw').style.display='none';g('gpw').style.display='block';g('gp2').value='';say('');
 if(m==='login'){g('gp').textContent='Log in with your email and password.';g('gpl').textContent='Password';g('gp2').autocomplete='current-password';g('gb').textContent='Log in';g('gfg').textContent='Forgot password?';}
-else{g('gp').textContent='Enter your email. We will send a code to set a new password.';g('gpl').textContent='New password (8+ characters, letters and numbers)';g('gp2').autocomplete='new-password';g('gpw').style.display='none';g('gb').textContent='Send code';g('gfg').textContent='Back to log in';}
-say('');}
-function ask(){g('gf').style.display='block';setMode('login');}
-var t='';try{t=localStorage.getItem('mci_tok')||'';}catch(x){}
-if(t){api({action:'check',token:t}).then(function(r){if(r.ok)open_();else{try{localStorage.removeItem('mci_tok');}catch(x){}ask();}}).catch(function(){g('gp').textContent='No internet. Please try again.';});}else ask();
+else if(m==='forgot'){g('gp').textContent='Enter your email. We will send you a link to set a new password.';g('gpw').style.display='none';g('gb').textContent='Send reset link';g('gfg').textContent='Back to log in';}
+else if(m==='confirm'){g('gp').textContent='Your email is not verified yet. Enter the code we emailed you.';g('gew').style.display='none';g('gpw').style.display='none';g('gcw').style.display='block';g('gb').textContent='Verify email';g('gfg').textContent='Send code again';}
+else if(m==='newpw'){g('gp').textContent='Set your new password.';g('gew').style.display='none';g('gpl').textContent='New password (8+ characters, letters and numbers)';g('gp2').autocomplete='new-password';g('gb').textContent='Save new password';g('gfg').textContent='';}}
+function open_(){var e=g('gate');if(e)e.remove();}
+function enter(user){
+sb.from('profiles').select('*').eq('id',user.id).maybeSingle().then(function(r){
+if(r.error||!r.data){setMode('login');say(r.error?r.error.message:'Profile not found. Please register again.');return;}
+uid=user.id;window.__mciUser=user;window.__mciProf=r.data;
+if(window.mciBoot)window.mciBoot(r.data,user);
+open_();});}
+sb.auth.onAuthStateChange(function(ev){if(ev==='PASSWORD_RECOVERY'){recovering=true;setMode('newpw');}});
+sb.auth.getSession().then(function(r){var s=r.data&&r.data.session;
+if(recovering){setMode('newpw');return;}
+if(s&&s.user){enter(s.user);}else setMode('login');}).catch(function(){setMode('login');});
 g('gs').onchange=function(){g('gp2').type=this.checked?'text':'password';};
-g('gfg').onclick=function(e){e.preventDefault();setMode(mode==='login'?'forgot':'login');};
-function done(r){if(r.ok){try{localStorage.setItem('mci_tok',r.token);}catch(x){}open_();}else say(r.error||'Something went wrong.');}
-g('gb').onclick=function(){var em=g('ge').value.trim().toLowerCase(),b=g('gb'),pw=g('gp2').value;say('');
-if(!em){say('Enter your email.');return;}
-if(mode==='login'){if(!pw){say('Enter your password.');return;}b.disabled=true;
-api({action:'login',email:em,pw:pw}).then(function(r){b.disabled=false;done(r);}).catch(function(){b.disabled=false;say('No internet.');});return;}
-if(!sent){b.disabled=true;api({action:'send',email:em,mode:'login'}).then(function(r){b.disabled=false;
-if(r.ok||/wait one minute/.test(r.error||'')){sent=true;g('ge').readOnly=true;g('gcw').style.display='block';g('gpw').style.display='block';g('gp2').value='';b.textContent='Reset password and log in';say('Code sent. Check your email (and Spam).',true);g('gc').focus();}else say(r.error||'Could not send.');}).catch(function(){b.disabled=false;say('No internet.');});return;}
-var c=g('gc').value.trim();if(c.length!==6){say('Enter the 6-digit code.');return;}
-if(!RX.test(pw)){say('Password needs at least 8 characters with letters and numbers.');return;}
-b.disabled=true;api({action:'verify',email:em,code:c,pw:pw}).then(function(r){b.disabled=false;done(r);}).catch(function(){b.disabled=false;say('No internet.');});};
+g('gfg').onclick=function(e){e.preventDefault();
+if(mode==='login'){setMode('forgot');}
+else if(mode==='confirm'){sb.auth.resend({type:'signup',email:email}).then(function(r){say(r.error?r.error.message:'New code sent.',!r.error);});}
+else if(mode==='forgot'){setMode('login');}};
+g('gb').onclick=function(){var b=g('gb');say('');
+if(mode==='login'){email=g('ge').value.trim().toLowerCase();var pw=g('gp2').value;
+if(!email||!pw){say('Enter your email and password.');return;}
+b.disabled=true;
+sb.auth.signInWithPassword({email:email,password:pw}).then(function(r){b.disabled=false;
+if(r.error){if(/not confirmed/i.test(r.error.message)){setMode('confirm');sb.auth.resend({type:'signup',email:email});say('We sent a new code to your email.',true);}else say('Wrong email or password. If you forgot it, tap Forgot password.');return;}
+enter(r.data.user);}).catch(function(){b.disabled=false;say('No internet.');});return;}
+if(mode==='forgot'){email=g('ge').value.trim().toLowerCase();if(!email){say('Enter your email.');return;}b.disabled=true;
+sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/app.html'}).then(function(r){b.disabled=false;say(r.error?r.error.message:'If this email is registered, a reset link has been sent. Check your email (and Spam).',!r.error);}).catch(function(){b.disabled=false;say('No internet.');});return;}
+if(mode==='confirm'){var c=g('gc').value.replace(/[^0-9]/g,'');if(c.length<6){say('Enter the code from your email.');return;}b.disabled=true;
+sb.auth.verifyOtp({email:email,token:c,type:'signup'}).then(function(r){b.disabled=false;if(r.error){say('Wrong or expired code.');return;}enter(r.data.user);}).catch(function(){b.disabled=false;say('No internet.');});return;}
+if(mode==='newpw'){var p=g('gp2').value;if(!RX.test(p)){say('Password needs at least 8 characters with letters and numbers.');return;}b.disabled=true;
+sb.auth.updateUser({password:p}).then(function(r){b.disabled=false;if(r.error){say(r.error.message);return;}recovering=false;try{history.replaceState(null,'',location.pathname);}catch(x){}enter(r.data.user);}).catch(function(){b.disabled=false;say('No internet.');});}};
+window.mciSync=function(){if(!uid||!window.S)return;clearTimeout(tm);tm=setTimeout(function(){var m=S.me,cl=function(v,n){return String(v==null?'':v).slice(0,n);};
+var row={name:cl(m.name,80)||'Member',age:Math.min(80,Math.max(18,+m.age||28)),height_in:Math.min(84,Math.max(48,+m.ht||70)),city:cl(m.city,60),state:cl(m.state,60),profession:cl(m.prof,40),stage:cl(m.stage,30),work:cl(m.work,120),income:cl(m.income,40),community:cl(m.comm,60),language:cl(m.lang,40),religion:cl(m.rel,40),diet:cl(m.diet,30),interests:(m.ints||[]).slice(0,20).map(function(x){return cl(x,30);}),bio:cl(m.about,800),pmin:+m.pmin||null,pmax:+m.pmax||null,paused:!!(S.priv&&S.priv.paused)};
+var j=JSON.stringify(row);if(j===last)return;last=j;
+sb.from('profiles').update(row).eq('id',uid).then(function(r){if(r.error){last='';console.warn(r.error.message);}});},1200);};
+window.mciLogout=function(){sb.auth.signOut().then(function(){location.reload();});};
+window.mciDelete=function(){return sb.rpc('delete_my_account').then(function(){return sb.auth.signOut();}).then(function(){location.reload();});};
 })();
 </script>
 
@@ -265,7 +289,7 @@ priv:{photo:'mutual',phone:'accepted',income:'interested',family:'accepted',inco
 verify:{icai:'none',work:'none',photo:'none'},disc:'balanced',notif:[],seen:0,seeded:false};}
 var S;
 function load(){var d=defaults();try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);for(var k in o)d[k]=o[k];}}catch(e){}return d;}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}if(window.mciSync&&S.setup)window.mciSync();}
 S=load();
 function oppo(){return S.me.gender==='man'?'woman':'man';}
 function P(id){for(var i=0;i<PROFILES.length;i++)if(PROFILES[i].id===id)return PROFILES[i];}
@@ -508,10 +532,10 @@ menu:function(e){var id=e.dataset.id;openSheet(function(){return sMenu(id);},{mo
 reportit:function(e){SH.pop();drawSheets();toast('Report received. We will review it.');notify('You reported '+P(e.dataset.id).name+'.');save();},
 blockit:function(e){var id=e.dataset.id;S.blocked[id]=1;delete S.shortlist[id];SH=[];drawSheets();render();save();toast('Blocked');},
 reqphoto:function(e){S.photoReq[e.dataset.id]=1;save();drawSheets();toast('Photo request sent');},
-logout:function(){SH=[];drawSheets();openSheet(function(){return '<div><h2>Log out?</h2><p class="mut" style="margin:6px 0 14px">This demo keeps your data on this device.</p><div class="row"><button class="btn" data-act="close">Stay</button><button class="btn pri" style="flex:1" data-act="dologout">Log out</button></div></div>';},{modal:true,keep:true});},
-dologout:function(){SH=[];drawSheets();S.tab='today';render();toast('Logged out (demo)');},
+logout:function(){SH=[];drawSheets();openSheet(function(){return '<div><h2>Log out?</h2><p class="mut" style="margin:6px 0 14px">You can log in again any time.</p><div class="row"><button class="btn" data-act="close">Stay</button><button class="btn pri" style="flex:1" data-act="dologout">Log out</button></div></div>';},{modal:true,keep:true});},
+dologout:function(){SH=[];drawSheets();if(window.mciLogout){window.mciLogout();return;}S.tab='today';render();toast('Logged out');},
 'delete':function(){openSheet(function(){return '<div><h2>Delete your account?</h2><p class="mut" style="margin:6px 0 14px">This clears your demo profile, interests and chats on this device.</p><div class="row"><button class="btn" data-act="close">Cancel</button><button class="btn co" style="flex:1" data-act="dodelete">Delete</button></div></div>';},{modal:true,keep:true});},
-dodelete:function(){try{localStorage.removeItem(KEY);}catch(e){}S=defaults();seed();SH=[];drawSheets();render();openSetup();},
+dodelete:function(){try{localStorage.removeItem(KEY);}catch(e){}if(window.mciDelete){window.mciDelete();return;}S=defaults();seed();SH=[];drawSheets();render();openSetup();},
 dosetup:function(){var g=function(i){return document.getElementById(i).value;};var n=g('s_name').trim();if(!n){toast('Please enter your name');return;}var cn=g('s_city').trim();if(!cn){toast('Please enter your city');return;}var c=CITIES.filter(function(x){return x[0].toLowerCase()===cn.toLowerCase();})[0]||[cn.replace(/[<>&"]/g,'').slice(0,40),'India'];S.me.name=n;var gv=g('s_gender');S.me.by=gv.charAt(0)==='p'?'parent':'self';S.me.gender=gv.replace(/^p/,'');S.me.age=+g('s_age');S.me.city=c[0];S.me.state=c[1];S.me.prof=g('s_prof');S.me.stage=g('s_stage');S.me.pmin=Math.max(21,S.me.age-4);S.me.pmax=S.me.age+4;S.setup=true;S.since=Date.now();S.seeded=false;S.received={};S.notif=[];seed();SH=[];drawSheets();render();toast(S.me.by==='parent'?'Profile created for '+first(n):'Welcome, '+first(n));},
 skipsetup:function(){S.setup=true;save();SH=[];drawSheets();render();}
 };
@@ -521,7 +545,16 @@ document.addEventListener('change',function(ev){var t=ev.target;if(t.dataset&&t.
 document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&SH.length){if(SH.some(function(s){return s.fn===sSetup;}))return;closeSheet();render();}
 if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches&&ev.target.matches('[role=button][data-act]')&&ev.target.tagName!=='BUTTON'){ev.preventDefault();ACT[ev.target.dataset.act](ev.target,ev);}
 if(ev.key==='Enter'&&ev.target.id==='msg'){var b=document.querySelector('[data-act=sendmsg]');if(b)ACT.sendmsg(b);}});
-seed();render();if(!S.setup)openSetup();
+window.mciBoot=function(p,u){
+if(S.uid!==u.id){S=defaults();S.uid=u.id;}
+var m=S.me;m.name=p.name;m.gender=p.gender;m.age=p.age;
+if(p.height_in)m.ht=p.height_in;
+m.city=p.city||m.city;m.state=p.state||m.state;m.prof=p.profession||m.prof;m.stage=p.stage||m.stage;
+if(p.work!=null)m.work=p.work;if(p.income)m.income=p.income;if(p.community)m.comm=p.community;if(p.language)m.lang=p.language;if(p.religion)m.rel=p.religion;if(p.diet)m.diet=p.diet;
+m.ints=p.interests||[];m.about=p.bio||'';if(p.pmin)m.pmin=p.pmin;if(p.pmax)m.pmax=p.pmax;
+S.setup=true;seed();save();SH=[];drawSheets();render();};
+seed();render();if(!S.setup&&!window.MCI_AUTH)openSetup();
+if(window.__mciProf)window.mciBoot(window.__mciProf,window.__mciUser);
 </script>
 </body>
 </html>
