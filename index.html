@@ -346,7 +346,7 @@ details[open] .plus{transform:rotate(45deg)}
 <div style="flex:1 1 220px;min-width:0"><label for="stage" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Stage</label><select id="stage" name="stage" required style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"><option value="Qualified">Qualified</option><option value="Final">Final</option><option value="Intermediate">Intermediate</option><option value="Foundation">Foundation</option><option value="Not applicable">Not applicable</option></select></div>
 <div style="flex:1 1 220px;min-width:0"><label for="city" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">City</label><input id="city" name="city" type="text" required autocomplete="address-level2" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
 <div style="flex:1 1 220px;min-width:0"><label for="whatsapp" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">WhatsApp number</label><input id="whatsapp" name="whatsapp" type="tel" required autocomplete="tel" inputmode="tel" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
-<div style="flex:1 1 220px;min-width:0"><label for="email" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Email (optional)</label><input id="email" name="email" type="email" autocomplete="email" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
+<div style="flex:1 1 220px;min-width:0"><label for="email" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">Email (we send a code here)</label><input id="email" name="email" type="email" required autocomplete="email" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px"></div>
 <div style="flex:1 1 100%"><label for="about" style="display:block;margin-bottom:6px;font-size:14px;font-weight:600;color:#14391F">A few lines about you</label><textarea id="about" name="about" rows="3" maxlength="500" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;font:inherit;font-size:16px;color:#14391F;background:#FFFFFF;border:1.5px solid #9DB39A;border-radius:12px;resize:vertical"></textarea></div>
 <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
 <label style="flex:1 1 100%;display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45"><input id="consent" name="consent" type="checkbox" required style="width:22px;height:22px;margin:0;flex:none"><span>I agree that MarryCAIndia.com may store these details and contact me on WhatsApp or email about my profile.</span></label>
@@ -358,11 +358,30 @@ var SHEET_URL="https://script.google.com/macros/s/AKfycbx9fKvga31SzCbJziKa7ZGS0i
 (function(){
 var modal=document.getElementById('modal');
 function openM(e){if(e)e.preventDefault();modal.style.display='block';document.body.style.overflow='hidden';modal.scrollTop=0;setTimeout(function(){var f=document.getElementById('role');if(f)f.focus();},50);}
-function closeM(){modal.style.display='none';document.body.style.overflow='';}
+function closeM(){modal.style.display='none';var oo=document.getElementById('otp');if(oo){oo.remove();form.style.display='';}document.body.style.overflow='';}
 document.querySelectorAll('a[href="#join"]').forEach(function(a){a.addEventListener('click',openM);});
 document.getElementById('closebtn').addEventListener('click',closeM);
 modal.addEventListener('click',function(e){if(e.target===modal)closeM();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeM();});
+
+function api(q){return fetch(SHEET_URL+'?'+new URLSearchParams(q)).then(function(r){return r.json();});}
+function showOtp(em){
+form.style.display='none';
+var o=document.getElementById('otp');if(o)o.remove();
+o=document.createElement('div');o.id='otp';
+o.style.cssText='background:#FFFCEE;color:#14391F;border-radius:24px;padding:28px;box-shadow:0 22px 40px -22px rgba(0,0,0,0.45);font-family:inherit';
+o.innerHTML='<h3 style="margin:0 0 8px;font-size:24px;color:#14532D">Verify your email</h3><p style="margin:0 0 16px;font-size:16px;line-height:1.5">We sent a 6-digit code to <b></b>. Enter it below. Check Spam too.</p><input id="otpc" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" style="width:100%;box-sizing:border-box;min-height:56px;font-size:28px;letter-spacing:8px;text-align:center;border:1.5px solid #9DB39A;border-radius:12px;color:#14391F;background:#fff"><button id="otpb" type="button" style="width:100%;margin-top:14px;min-height:52px;font:inherit;font-size:17px;font-weight:700;color:#14391F;background:#F4C542;border:0;border-radius:999px;cursor:pointer">Verify and continue</button><button id="otpr" type="button" style="width:100%;margin-top:8px;min-height:44px;font:inherit;font-size:15px;color:#14532D;background:none;border:0;cursor:pointer;text-decoration:underline">Send code again</button><p id="otpm" role="status" style="margin:8px 0 0;font-size:15px;font-weight:600;min-height:22px;color:#B3261E"></p>';
+o.querySelector('b').textContent=em;
+form.parentNode.appendChild(o);
+var m=document.getElementById('otpm'),vb=document.getElementById('otpb');
+vb.onclick=function(){var code=document.getElementById('otpc').value.trim();if(code.length!==6){m.style.color='#B3261E';m.textContent='Enter the 6-digit code.';return;}
+vb.disabled=true;vb.textContent='Checking...';
+api({action:'verify',email:em,code:code}).then(function(r){vb.disabled=false;vb.textContent='Verify and continue';
+if(r.ok){try{localStorage.setItem('mci_tok',r.token);}catch(x){}m.style.color='#14532D';m.textContent='Verified! Opening your member area...';location.href='app.html';}
+else{m.style.color='#B3261E';m.textContent=r.error||'Wrong code.';}}).catch(function(){vb.disabled=false;vb.textContent='Verify and continue';m.style.color='#B3261E';m.textContent='No internet. Try again.';});};
+document.getElementById('otpr').onclick=function(){api({action:'send',email:em,mode:'register'}).then(function(r){m.style.color=r.ok?'#14532D':'#B3261E';m.textContent=r.ok?'New code sent.':(r.error||'Could not send.');});};
+setTimeout(function(){document.getElementById('otpc').focus();},50);
+}
 var form=document.getElementById('signup'),msg=document.getElementById('msg'),btn=document.getElementById('send');
 form.addEventListener('submit',function(e){
 e.preventDefault();
@@ -372,8 +391,11 @@ if(!SHEET_URL){msg.textContent='Sign-up is not connected yet. Please try again s
 btn.disabled=true;btn.textContent='Sending...';
 var data=new URLSearchParams(new FormData(form));
 fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:data}).then(function(){
-form.reset();msg.style.color='#14532D';msg.textContent='Thank you! Your profile request is received. We will contact you on WhatsApp soon.';
+var em=document.getElementById('email').value.trim().toLowerCase();
+return api({action:'send',email:em,mode:'register'}).then(function(r){
 btn.disabled=false;btn.textContent='Start free for 30 days';
+if(!r.ok){msg.textContent=r.error||'Could not send code.';return;}
+showOtp(em);});
 }).catch(function(){msg.textContent='Could not send. Check your internet and try again.';btn.disabled=false;btn.textContent='Start free for 30 days';});
 });
 })();
