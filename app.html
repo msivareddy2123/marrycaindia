@@ -276,7 +276,7 @@ var PQ=[
 ['Looking for someone who',['is kind, curious and honest about small things.','can laugh at audit jokes and still switch off on weekends.','respects family and has dreams of their own.','is calm in a crisis and generous in a good week.','enjoys simple plans and long conversations.']],
 ['My busy season survival tip',['Sleep first, spreadsheets second.','Plan one real meal a day, no matter what.','Say no early, say sorry never.','Keep one evening a week that is untouchable.','Good chai and a very short to-do list.']]
 ];
-function stories(p){var h=hsh(p.id);var a=PQ[h%4],b=PQ[(h+2)%4];return[{q:a[0],a:a[1][(h>>3)%5]},{q:b[0],a:b[1][(h>>5)%5]}];}
+function stories(p){if(REAL.on){return p.bio?[{q:'About me',a:p.bio}]:[];}var h=hsh(p.id);var a=PQ[h%4],b=PQ[(h+2)%4];return[{q:a[0],a:a[1][(h>>3)%5]},{q:b[0],a:b[1][(h>>5)%5]}];}
 var ICEBREAKERS=['I liked your answer about your Sunday. What does your perfect one look like?','Hi, your profile felt genuine. What is something you are looking forward to this year?','Hello! We seem to share a few interests. What got you into them?','Namaste! Would you like to start with a short call this week?'];
 var REPLIES=['Thank you for writing. I liked your profile too.','Haha, that is a good one. Tell me more about your work week.','Sure, a call sounds good. Weekends work best for me.','That is lovely. My parents would like to meet your family when we are ready.','I am glad we are talking. Shall we plan a video call?'];
 
@@ -288,6 +288,7 @@ shortlist:{},sent:{},received:{},chats:{},journey:{},blocked:{},photoReq:{},comp
 priv:{photo:'mutual',phone:'accepted',income:'interested',family:'accepted',incognito:false,paused:false},
 verify:{icai:'none',work:'none',photo:'none'},disc:'balanced',notif:[],seen:0,seeded:false};}
 var S;
+var REAL={on:false,uid:null,started:false,busy:false,again:false,known:null};
 function load(){var d=defaults();try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);for(var k in o)d[k]=o[k];}}catch(e){}return d;}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}if(window.mciSync&&S.setup)window.mciSync();}
 S=load();
@@ -347,7 +348,7 @@ tot+=3;ok+=(S.verify.icai==='verified'?1:0)+(S.verify.work!=='none'?1:0)+(S.veri
 function trust(){var t=15;if(S.verify.icai!=='none')t+=S.verify.icai==='verified'?40:20;if(S.verify.work!=='none')t+=15;if(S.verify.photo!=='none')t+=20;if(filled('family'))t+=10;return Math.min(100,t);}
 
 function ring(v,size,sw){size=size||56;sw=sw||6;var r=size/2-sw/2-1,c=2*Math.PI*r;return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+v+' percent"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--ln)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--gr2)" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*v/100)+' '+c+'" transform="rotate(-90 '+size/2+' '+size/2+')"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="'+size*0.27+'" font-weight="800" fill="var(--ink)">'+v+'</text></svg>';}
-function badges(p){var b='';if(p.prof!=='Other')b+='<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>';else b+='<span class="bdg w">Not institute-verified</span>';if(p.wv)b+='<span class="bdg">'+I('brief',12)+'Work</span>';return b;}
+function badges(p){var b='';if(REAL.on){b+=p.wv?'<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>':'<span class="bdg w">Not institute-verified</span>';return b;}if(p.prof!=='Other')b+='<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>';else b+='<span class="bdg w">Not institute-verified</span>';if(p.wv)b+='<span class="bdg">'+I('brief',12)+'Work</span>';return b;}
 function stageTxt(p){return p.stage==='Qualified'||p.stage==='Not applicable'?'':' '+p.stage;}
 
 function pickCard(p){var c=compat(p).score,l=locked(p);return '<article class="pick" data-act="open" data-id="'+p.id+'" role="button" tabindex="0" aria-label="Open profile of '+esc(p.name)+'"><div class="ph'+(l?' blur':'')+'" style="background:'+grad(p)+'"><span class="av-i">'+ini(p.name)+'</span><span class="sc">'+c+'% match</span>'+(l?'<span class="lk">'+I('lock',14)+'Photo private</span>':'')+'<button class="hb'+(S.shortlist[p.id]!=null?' on':'')+'" data-act="short" data-id="'+p.id+'" aria-label="Shortlist '+esc(p.name)+'">'+I('heart',20)+'</button></div><div class="pb"><strong>'+esc(p.name)+', '+p.age+'</strong><span>'+p.city+' · '+p.prof+stageTxt(p)+'</span><span>'+esc(p.work)+'</span><div class="bd">'+badges(p)+'</div></div></article>';}
@@ -363,8 +364,8 @@ var looking=pool().filter(function(p){return p.age>=S.me.pmin-1&&p.act<=3;}).sli
 var labels=['Shortlisted','Interests','Chatting','Families met','Decided'];
 return '<div class="pad"><div style="padding-top:4px"><div class="script">Namaste,</div><h1>'+esc(first(S.me.name))+'</h1><p class="mut" style="margin-top:6px">'+greet()+' Here are five people picked for you today. They change at midnight.</p></div>'
 +'<div class="sec"><div class="sech"><h2>Your journey</h2></div><div class="strip">'+labels.map(function(l,i){return '<div class="stage'+(c[i]>0&&i===1&&newN?' hi':'')+'"><b>'+c[i]+'</b><span>'+l+'</span></div>';}).join('')+'</div>'+(newN?'<button class="card row sp" data-act="seg" data-v="received" style="text-align:left;width:100%"><div class="row">'+I('heart',22)+'<div><strong>'+newN+' new interest'+(newN>1?'s':'')+'</strong><div class="sm mut">Someone would like to know you</div></div></div>'+I('chev',18)+'</button>':'')+'</div>'
-+'<div class="sec"><div class="sech"><h2>Today\'s five</h2><button class="lnk" data-act="tab" data-v="search">See all</button></div><div class="strip">'+pk.map(pickCard).join('')+'</div></div>'
-+'<div class="sec"><div class="card row sp wrap"><div class="row">'+I('bolt',26)+'<div><strong>'+(boosted()?'Boost is on · '+hoursLeft()+' h left':'Boost your profile')+'</strong><div class="sm mut">'+(boosted()?'You appear first in matching searches.':'Appear first in matching searches for 24 hours.')+'</div></div></div>'+(boosted()?'':'<button class="btn go sm" data-act="boost">Boost now</button>')+'</div></div>'
++'<div class="sec"><div class="sech"><h2>Today\'s five</h2><button class="lnk" data-act="tab" data-v="search">See all</button></div><div class="strip">'+(pk.length?pk.map(pickCard).join(''):'<div class="empty" style="width:100%"><h3>You are among the first members</h3><p>New profiles appear here as members join. Share MarryCAIndia with friends and family.</p></div>')+'</div></div>'
++(REAL.on?'':'<div class="sec"><div class="card row sp wrap"><div class="row">'+I('bolt',26)+'<div><strong>'+(boosted()?'Boost is on · '+hoursLeft()+' h left':'Boost your profile')+'</strong><div class="sm mut">'+(boosted()?'You appear first in matching searches.':'Appear first in matching searches for 24 hours.')+'</div></div></div>'+(boosted()?'':'<button class="btn go sm" data-act="boost">Boost now</button>')+'</div></div>')
 +(comp<100?'<div class="sec"><button class="card row sp" data-act="tab" data-v="me" style="text-align:left;width:100%"><div class="row">'+ring(comp,58)+'<div><strong>Complete your profile</strong><div class="sm mut">Fuller profiles get more replies.</div></div></div>'+I('chev',18)+'</button></div>':'')
 +'<div class="sec"><div class="sech"><h2>Looking for someone like you</h2></div><div class="card list" style="padding:6px 14px">'+(looking.length?looking.map(function(p){return rowP(p,'<span class="bdg">'+compat(p).score+'%</span>');}).join(''):'<div class="empty">No matches yet. Widen your age preference in your profile.</div>')+'</div></div>'
 +'<div class="sec"><div class="card row" style="background:var(--okbg);border-color:transparent;box-shadow:none">'+I('shield',28)+'<div><strong>Meet safely</strong><div class="sm mut">Meet first in a public place and bring a family member or friend along. Never send money to anyone.</div></div></div></div></div>';}
@@ -379,7 +380,7 @@ function vInterests(){var seg=S.seg,h='';var segs=[['received','Received'],['sen
 h+='<div class="pad"><h1 style="padding-top:4px">Interests</h1><div class="seg" style="margin:14px 0" role="tablist">'+segs.map(function(s){return '<button class="'+(seg===s[0]?'on':'')+'" data-act="seg" data-v="'+s[0]+'" role="tab">'+s[1]+'</button>';}).join('')+'</div>';
 if(seg==='received'){var k=ids(S.received).filter(function(i){return S.received[i].status!=='declined'&&!S.blocked[i];});
 h+=k.length?'<div class="col">'+k.map(function(i){var p=P(i),r=S.received[i];return '<div class="card col"><div class="list" style="border:0">'+rowP(p)+'</div><div class="q"><small>Their note</small><p>'+esc(r.note)+'</p></div><div class="sm mut">'+ago(r.at)+' · '+compat(p).score+'% match</div>'+(r.status==='accepted'?'<div class="row"><span class="bdg">Accepted</span><button class="btn sm pri" data-act="chat" data-id="'+i+'">Open chat</button></div>':'<div class="row wrap"><button class="btn pri sm" data-act="accept" data-id="'+i+'">Accept</button><button class="btn sm" data-act="later" data-id="'+i+'">'+(r.status==='later'?'Still thinking':'Think about it')+'</button><button class="btn sm" style="border-color:var(--ln);color:var(--mut)" data-act="decline" data-id="'+i+'">Decline</button></div>')+'</div>';}).join('')+'</div>':'<div class="empty"><h3>No interests yet</h3><p>When someone likes your profile, it shows here.</p></div>';}
-if(seg==='sent'){var k2=ids(S.sent);h+=k2.length?'<div class="col">'+k2.map(function(i){var p=P(i),s=S.sent[i];return '<div class="card col">'+rowP(p,'<span class="bdg '+(s.status==='pending'?'w':s.status==='declined'?'c':'')+'">'+(s.status==='pending'?'Waiting':s.status==='declined'?'Declined':'Accepted')+'</span>')+'<div class="sm mut">You wrote: '+esc(s.note)+'</div>'+(s.status==='pending'?'<button class="lnk" data-act="simaccept" data-id="'+i+'">Demo: simulate their reply</button>':s.status==='accepted'?'<button class="btn sm pri" data-act="chat" data-id="'+i+'">Open chat</button>':'')+'</div>';}).join('')+'</div>':'<div class="empty"><h3>Nothing sent yet</h3><p>Open a profile and tap Send interest.</p></div>';}
+if(seg==='sent'){var k2=ids(S.sent);h+=k2.length?'<div class="col">'+k2.map(function(i){var p=P(i),s=S.sent[i];return '<div class="card col">'+rowP(p,'<span class="bdg '+(s.status==='pending'?'w':s.status==='declined'?'c':'')+'">'+(s.status==='pending'?'Waiting':s.status==='declined'?'Declined':'Accepted')+'</span>')+'<div class="sm mut">You wrote: '+esc(s.note)+'</div>'+(s.status==='pending'?(REAL.on?'':'<button class="lnk" data-act="simaccept" data-id="'+i+'">Demo: simulate their reply</button>'):s.status==='accepted'?'<button class="btn sm pri" data-act="chat" data-id="'+i+'">Open chat</button>':'')+'</div>';}).join('')+'</div>':'<div class="empty"><h3>Nothing sent yet</h3><p>Open a profile and tap Send interest.</p></div>';}
 if(seg==='shortlist'){var k3=ids(S.shortlist);h+=k3.length?'<p class="sm mut" style="margin-bottom:10px">Add private notes and pick up to three to compare. Share the list with your family.</p><div class="col">'+k3.map(function(i){var p=P(i);var on=S.compare.indexOf(i)>-1;return '<div class="card col">'+rowP(p)+'<div class="row sp wrap"><label class="row sm" style="min-height:44px"><input type="checkbox" data-act="cmp" data-id="'+i+'" '+(on?'checked':'')+' style="width:22px;height:22px"> Compare</label><button class="lnk" data-act="note" data-id="'+i+'">'+(S.shortlist[i]?'Edit note':'Add note')+'</button></div>'+(S.shortlist[i]?'<div class="q"><small>My note</small><p>'+esc(S.shortlist[i])+'</p></div>':'')+'</div>';}).join('')+'</div><div class="row wrap" style="margin-top:14px"><button class="btn pri" data-act="docompare" '+(S.compare.length<2?'disabled':'')+'>'+I('cols',18)+'Compare '+S.compare.length+'</button><button class="btn" data-act="shareshort">'+I('share',18)+'Share with family</button></div>':'<div class="empty"><h3>Your shortlist is empty</h3><p>Tap the heart on any profile to save it here.</p></div>';}
 if(seg==='accepted'){var k4=ids(S.sent).filter(function(i){return S.sent[i].status==='accepted';}).concat(ids(S.received).filter(function(i){return S.received[i].status==='accepted';})).filter(function(v,i,a){return a.indexOf(v)===i;});
 h+=k4.length?'<div class="card list" style="padding:6px 14px">'+k4.map(function(i){return rowP(P(i));}).join('')+'</div>':'<div class="empty"><h3>No connections yet</h3><p>Photos and chat open once both sides accept.</p></div>';}
@@ -404,7 +405,7 @@ var h='<div class="pad"><div class="hero"><div class="avb" style="background:lin
 function render(){var t=S.tab,v=t==='today'?vToday():t==='search'?vSearch():t==='interests'?vInterests():t==='chats'?vChats():vMe();
 var unseen=S.notif.length-S.seen;var newN=ids(S.received).filter(function(k){return S.received[k].status==='new';}).length;
 var tabs=[['today','Today','home'],['search','Search','search'],['interests','Interests','heart'],['chats','Chats','chat'],['me','Me','user']];
-document.getElementById('app').innerHTML='<div class="demo">Demo preview with sample profiles. Real accounts and payments start at launch.</div><header class="top"><div class="logo"><svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><circle cx="18" cy="24" r="14" fill="none" stroke="#2E8B57" stroke-width="5"/><circle cx="30" cy="24" r="14" fill="none" stroke="#E0483E" stroke-width="5"/></svg><span>MarryCA<b>India</b></span></div><button class="ibtn" data-act="notifs" aria-label="Notifications">'+I('bell',22)+(unseen>0?'<span class="dot">'+unseen+'</span>':'')+'</button></header><main>'+v+'</main><nav class="nav" aria-label="Main">'+tabs.map(function(x){return '<button class="'+(t===x[0]?'on':'')+'" data-act="tab" data-v="'+x[0]+'" aria-label="'+x[1]+'">'+I(x[2],24)+x[1]+(x[0]==='interests'&&newN?'<span class="dot">'+newN+'</span>':'')+'</button>';}).join('')+'</nav>';
+document.getElementById('app').innerHTML=(REAL.on?'':'<div class="demo">Demo preview with sample profiles. Real accounts and payments start at launch.</div>')+'<header class="top"><div class="logo"><svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><circle cx="18" cy="24" r="14" fill="none" stroke="#2E8B57" stroke-width="5"/><circle cx="30" cy="24" r="14" fill="none" stroke="#E0483E" stroke-width="5"/></svg><span>MarryCA<b>India</b></span></div><button class="ibtn" data-act="notifs" aria-label="Notifications">'+I('bell',22)+(unseen>0?'<span class="dot">'+unseen+'</span>':'')+'</button></header><main>'+v+'</main><nav class="nav" aria-label="Main">'+tabs.map(function(x){return '<button class="'+(t===x[0]?'on':'')+'" data-act="tab" data-v="'+x[0]+'" aria-label="'+x[1]+'">'+I(x[2],24)+x[1]+(x[0]==='interests'&&newN?'<span class="dot">'+newN+'</span>':'')+'</button>';}).join('')+'</nav>';
 var qi=document.getElementById('q');if(qi){qi.addEventListener('input',function(){S.filters.q=qi.value;clearTimeout(window._qt);window._qt=setTimeout(function(){var pos=qi.selectionStart;render();var n=document.getElementById('q');if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(e){}}},250);});}
 var ss=document.getElementById('sortsel');if(ss)ss.addEventListener('change',function(){S.sort=ss.value;save();render();});
 document.documentElement.setAttribute('data-theme',S.theme);}
@@ -547,12 +548,95 @@ if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches&&ev.target.matches('[role
 if(ev.key==='Enter'&&ev.target.id==='msg'){var b=document.querySelector('[data-act=sendmsg]');if(b)ACT.sendmsg(b);}});
 window.mciBoot=function(p,u){
 if(S.uid!==u.id){S=defaults();S.uid=u.id;}
+REAL.on=true;REAL.uid=u.id;S.seeded=true;
 var m=S.me;m.name=p.name;m.gender=p.gender;m.age=p.age;
 if(p.height_in)m.ht=p.height_in;
 m.city=p.city||m.city;m.state=p.state||m.state;m.prof=p.profession||m.prof;m.stage=p.stage||m.stage;
 if(p.work!=null)m.work=p.work;if(p.income)m.income=p.income;if(p.community)m.comm=p.community;if(p.language)m.lang=p.language;if(p.religion)m.rel=p.religion;if(p.diet)m.diet=p.diet;
 m.ints=p.interests||[];m.about=p.bio||'';if(p.pmin)m.pmin=p.pmin;if(p.pmax)m.pmax=p.pmax;
-S.setup=true;seed();save();SH=[];drawSheets();render();};
+S.setup=true;
+if(S.notif.length&&S.notif[0].t.indexOf('Welcome to MarryCAIndia')===0&&!S.notifReal){S.notif=[];}
+S.notifReal=true;
+save();SH=[];drawSheets();render();
+startReal();refreshReal(true);};
+
+/* ===== REAL MEMBERS (Supabase) ===== */
+function sbx(){return window.mciSB;}
+function mapProf(r){return{id:r.id,name:r.name,g:r.gender,age:r.age,ht:r.height_in||66,city:r.city||'',state:r.state||'',prof:r.profession||'Other',stage:r.stage||'',work:r.work||'',income:r.income||'',comm:r.community||'',lang:r.language||'',rel:r.religion||'',diet:r.diet||'',ints:r.interests||[],open:false,act:0,wv:!!r.verified,bio:r.bio||''};}
+function stub(id,nm){return{id:id,name:nm||'Member',g:oppo(),age:0,ht:66,city:'',state:'',prof:'Other',stage:'',work:'',income:'',comm:'',lang:'',rel:'',diet:'',ints:[],open:false,act:99,wv:false,bio:'',stub:true};}
+function rerr(er){var m=(er&&er.message)||'';if(er&&er.code==='23505')return 'Already done.';if(/row-level security|violates/i.test(m))return 'Not allowed. Your free trial may have ended, or this member is no longer available.';return 'Something went wrong. Please try again.';}
+function startReal(){
+if(REAL.started||!sbx())return;REAL.started=true;
+try{sbx().channel('mci-'+REAL.uid).on('postgres_changes',{event:'*',schema:'public',table:'messages'},function(){refreshReal();}).on('postgres_changes',{event:'*',schema:'public',table:'interests'},function(){refreshReal();}).subscribe();}catch(e){}
+setInterval(function(){if(!document.hidden)refreshReal();},30000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)refreshReal();});}
+function openChatId(){var b=document.querySelector('[data-act=sendmsg]');return b?b.dataset.id:null;}
+function refreshReal(first){
+var sb=sbx();if(!sb||!REAL.on)return;
+if(REAL.busy){REAL.again=true;return;}REAL.busy=true;
+Promise.all([sb.from('profiles').select('*').neq('id',REAL.uid).limit(1000),sb.from('interests').select('*'),sb.from('messages').select('*').order('created_at',{ascending:true}).limit(3000),sb.from('shortlist').select('*'),sb.from('blocks').select('*'),sb.from('contacts').select('*')]).then(function(rs){
+REAL.busy=false;
+for(var i=0;i<rs.length;i++){if(rs[i].error){console.warn(rs[i].error.message);if(first)toast('Could not load members. Pull to refresh.');return;}}
+var uid=REAL.uid,pr=rs[0].data||[],it=rs[1].data||[],ms=rs[2].data||[],sl=rs[3].data||[],bl=rs[4].data||[],ct=rs[5].data||[];
+PROFILES=pr.map(mapProf);
+var oldRec=S.received||{},sent={},rec={},newKnown={};
+it.forEach(function(x){
+if(x.from_id===uid){sent[x.to_id]={note:x.note||'',status:x.status,at:Date.parse(x.created_at)};}
+else{var st=x.status==='pending'?((oldRec[x.from_id]&&oldRec[x.from_id].status==='later')?'later':'new'):x.status;rec[x.from_id]={note:x.note||'',status:st,at:Date.parse(x.created_at)};}});
+var chats={};
+ms.forEach(function(m){var o=m.from_id===uid?m.to_id:m.from_id;(chats[o]=chats[o]||[]).push({f:m.from_id===uid?'me':'them',t:m.body,at:Date.parse(m.created_at)});});
+var shortl={};sl.forEach(function(x){shortl[x.profile_id]=x.note||'';});
+var blocked={};bl.forEach(function(x){blocked[x.blocked]=1;});
+REAL.contacts={};ct.forEach(function(x){REAL.contacts[x.user_id]=x;});
+// notifications for new events
+var k=REAL.known;
+if(k){Object.keys(rec).forEach(function(id){if(!k['r'+id]){var pp=null;PROFILES.forEach(function(q){if(q.id===id)pp=q;});S.notif.unshift({t:(pp?pp.name:'Someone')+' sent you an interest.',at:Date.now()});}});
+Object.keys(sent).forEach(function(id){if(sent[id].status==='accepted'&&k['s'+id]!=='accepted'){var pp=null;PROFILES.forEach(function(q){if(q.id===id)pp=q;});S.notif.unshift({t:(pp?pp.name:'Someone')+' accepted your interest. You can chat now.',at:Date.now()});}});
+Object.keys(chats).forEach(function(id){var n=chats[id].length;if(n>(k['m'+id]||0)&&chats[id][n-1].f==='them'&&openChatId()!==id){var pp=null;PROFILES.forEach(function(q){if(q.id===id)pp=q;});S.notif.unshift({t:'New message from '+(pp?pp.name:'a member')+'.',at:Date.now()});}});}
+Object.keys(rec).forEach(function(id){newKnown['r'+id]=1;});Object.keys(sent).forEach(function(id){newKnown['s'+id]=sent[id].status;});Object.keys(chats).forEach(function(id){newKnown['m'+id]=chats[id].length;});
+REAL.known=newKnown;
+S.sent=sent;S.received=rec;S.chats=chats;S.shortlist=shortl;S.blocked=blocked;
+// journey
+var have={};[sent,rec].forEach(function(o){Object.keys(o).forEach(function(id){if(o[id].status==='accepted'){have[id]=1;}});});
+var jr=S.journey||{};Object.keys(have).forEach(function(id){var j=jr[id]||1;if(j<1)j=1;if((chats[id]||[]).length&&j<2)j=2;jr[id]=j;});S.journey=jr;
+// stubs so every referenced id has a profile object
+var ref={};[sent,rec,chats,shortl,blocked].forEach(function(o){Object.keys(o).forEach(function(id){ref[id]=1;});});
+Object.keys(ref).forEach(function(id){var f=false;PROFILES.forEach(function(q){if(q.id===id)f=true;});if(!f)PROFILES.push(stub(id,blocked[id]?'Blocked member':'Member (unavailable)'));});
+save();
+var cid=openChatId();
+render();if(cid&&S.chats[cid])redrawMsgs(cid);
+if(REAL.again){REAL.again=false;setTimeout(refreshReal,300);}
+}).catch(function(e){REAL.busy=false;console.warn(e);});}
+
+var A0={};['dosend','accept','decline','short','savenote','sendmsg','quick','stage','blockit','unblock','reportit'].forEach(function(n){A0[n]=ACT[n];});
+function sbFrom(t){return window.mciSB.from(t);}
+ACT.dosend=function(e){if(!REAL.on)return A0.dosend(e);var id=e.dataset.id,t=(document.getElementById('notetxt').value||'').trim();if(!t){toast('Write a short note first');return;}
+sbFrom('interests').insert({from_id:REAL.uid,to_id:id,note:t.slice(0,300)}).then(function(r){if(r.error){toast(rerr(r.error));return;}A0.dosend(e);refreshReal();});};
+ACT.accept=function(e){if(!REAL.on)return A0.accept(e);var id=e.dataset.id;
+sbFrom('interests').update({status:'accepted'}).eq('from_id',id).eq('to_id',REAL.uid).then(function(r){if(r.error){toast(rerr(r.error));return;}A0.accept(e);refreshReal();});};
+ACT.decline=function(e){if(!REAL.on)return A0.decline(e);var id=e.dataset.id;
+sbFrom('interests').update({status:'declined'}).eq('from_id',id).eq('to_id',REAL.uid).then(function(r){if(r.error){toast(rerr(r.error));return;}A0.decline(e);refreshReal();});};
+function syncShort(id){if(!REAL.on)return;var q=S.shortlist[id];
+if(q!=null){sbFrom('shortlist').upsert({user_id:REAL.uid,profile_id:id,note:String(q).slice(0,500)}).then(function(r){if(r.error)toast(rerr(r.error));});}
+else{sbFrom('shortlist').delete().eq('user_id',REAL.uid).eq('profile_id',id).then(function(r){if(r.error)toast(rerr(r.error));});}}
+ACT.short=function(e){A0.short(e);syncShort(e.dataset.id);};
+ACT.savenote=function(e){A0.savenote(e);syncShort(e.dataset.id);};
+function sendReal(id,t,after){sbFrom('messages').insert({from_id:REAL.uid,to_id:id,body:String(t).slice(0,2000)}).then(function(r){if(r.error){toast(rerr(r.error));return;}ensureChat(id);addMsg(id,'me',t);if((S.journey[id]||1)<2)S.journey[id]=2;if(after)after();redrawMsgs(id);save();});}
+ACT.sendmsg=function(e){if(!REAL.on)return A0.sendmsg(e);var id=e.dataset.id,inp=document.getElementById('msg'),t=inp.value.trim();if(!t)return;inp.value='';sendReal(id,t,null);};
+ACT.quick=function(e){if(!REAL.on)return A0.quick(e);var id=e.dataset.id,t=e.dataset.t;
+if(t==='ice'){document.getElementById('msg').value=ICEBREAKERS[hsh(id+Date.now())%4];return;}
+if(t==='call')sendReal(id,'Would you like a short video call? I am free Saturday 11 am or Sunday 6 pm.');
+if(t==='fam')sendReal(id,'I would like to introduce our families. Shall I ask my parents to call yours?');};
+ACT.stage=function(e){if(!REAL.on)return A0.stage(e);var id=e.dataset.id,v=+e.dataset.v;
+var tx=v===3?'Our families have met.':'We have decided to take this forward.';
+sendReal(id,tx,function(){S.journey[id]=v;save();SH.pop();openSheet(function(){return sChat(id);},{keep:true});setTimeout(function(){redrawMsgs(id);},0);render();if(v===4)toast('Congratulations from the MarryCAIndia team');});};
+ACT.blockit=function(e){if(!REAL.on)return A0.blockit(e);var id=e.dataset.id;
+sbFrom('blocks').insert({blocker:REAL.uid,blocked:id}).then(function(r){if(r.error&&r.error.code!=='23505'){toast(rerr(r.error));return;}A0.blockit(e);refreshReal();});};
+ACT.unblock=function(e){if(!REAL.on)return A0.unblock(e);var id=e.dataset.id;
+sbFrom('blocks').delete().eq('blocker',REAL.uid).eq('blocked',id).then(function(r){if(r.error){toast(rerr(r.error));return;}A0.unblock(e);refreshReal();});};
+ACT.reportit=function(e){if(!REAL.on)return A0.reportit(e);var id=e.dataset.id;
+sbFrom('reports').insert({reporter:REAL.uid,reported:id,reason:'Reported from the app'}).then(function(r){if(r.error){toast(rerr(r.error));return;}A0.reportit(e);});};
+
 seed();render();if(!S.setup&&!window.MCI_AUTH)openSetup();
 if(window.__mciProf)window.mciBoot(window.__mciProf,window.__mciUser);
 </script>

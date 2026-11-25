@@ -513,10 +513,10 @@ document.documentElement.lang=l;
 try{localStorage.setItem('mci_lang',l);}catch(x){}
 var s=document.getElementById('langsel');if(s)s.value=l;}
 var box=document.createElement('div');box.id='langbox';
-box.style.cssText='position:fixed;left:12px;bottom:12px;z-index:90;background:#14532D;border-radius:999px;padding:4px 6px 4px 12px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.35);font-family:system-ui,sans-serif';
-var lbl=document.createElement('span');lbl.textContent='🌐';lbl.style.cssText='font-size:18px';
+box.style.cssText='position:fixed;left:10px;bottom:16px;z-index:90;background:#14532D;border-radius:999px;padding:6px 8px 6px 14px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.35);font-family:system-ui,sans-serif';
+var lbl=document.createElement('span');lbl.textContent='🌐';lbl.style.cssText='font-size:24px';
 var sel=document.createElement('select');sel.id='langsel';sel.setAttribute('aria-label','Language');
-sel.style.cssText='background:#FFFBEA;color:#14391F;border:0;border-radius:999px;padding:8px 10px;font-size:15px;font-weight:600;min-height:40px';
+sel.style.cssText='background:#FFFBEA;color:#14391F;border:0;border-radius:999px;padding:10px 14px;font-size:18px;font-weight:700;min-height:48px';
 Object.keys(LN).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=LN[k];sel.appendChild(o);});
 box.appendChild(lbl);box.appendChild(sel);document.body.appendChild(box);
 sel.addEventListener('change',function(){setLang(sel.value);});
