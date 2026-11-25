@@ -344,6 +344,7 @@ details[open] .plus{transform:rotate(45deg)}
 <span style="display:flex;align-items:center;gap:10px"><span role="img" aria-label="Ring emoji logo" style="font-size:24px;line-height:1">💍</span>© 2026 MarryCAIndia.com. All rights reserved.</span>
 <span>Need help? <a href="mailto:support@marrycaindia.com" style="color:#14532D;font-weight:600;text-decoration:underline">support@marrycaindia.com</a></span>
 <span>Not affiliated with ICAI, ICMAI or ICSI.</span>
+<span style="flex:1 1 100%;font-size:13px;line-height:2">Matrimony: <a href="ca-matrimony.html">CA</a> · <a href="cma-matrimony.html">CMA</a> · <a href="cs-matrimony.html">CS</a> · <a href="hyderabad-matrimony.html">Hyderabad</a> · <a href="bengaluru-matrimony.html">Bengaluru</a> · <a href="mumbai-matrimony.html">Mumbai</a> · <a href="chennai-matrimony.html">Chennai</a> · <a href="delhi-matrimony.html">Delhi</a> · <a href="pune-matrimony.html">Pune</a> · <a href="kolkata-matrimony.html">Kolkata</a> · <a href="ahmedabad-matrimony.html">Ahmedabad</a> · <a href="south-india-ca-matrimony.html">South India CA</a> · <a href="andhra-pradesh-ca-matrimony.html">Andhra Pradesh CA</a> · <a href="telangana-ca-matrimony.html">Telangana CA</a></span>
 </footer>
 
 </div>
@@ -370,6 +371,7 @@ var SHEET_URL="https://script.google.com/macros/s/AKfycbyQQzHtBAV-ci0Qof2AETc-B2
 var modal=document.getElementById('modal');
 function openM(e){if(e)e.preventDefault();modal.style.display='block';document.body.style.overflow='hidden';modal.scrollTop=0;setTimeout(function(){var f=document.getElementById('role');if(f)f.focus();},50);}
 function closeM(){modal.style.display='none';var oo=document.getElementById('otp');if(oo){oo.remove();form.style.display='';}document.body.style.overflow='';}
+if(location.hash==='#join'){setTimeout(openM,100);}
 document.querySelectorAll('a[href="#join"]').forEach(function(a){a.addEventListener('click',openM);});
 document.getElementById('closebtn').addEventListener('click',closeM);
 modal.addEventListener('click',function(e){if(e.target===modal)closeM();});
