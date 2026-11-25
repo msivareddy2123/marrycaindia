@@ -135,6 +135,23 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 </style>
 </head>
 <body>
+<div id="gate" style="position:fixed;inset:0;z-index:9999;background:#FFF8E1;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,sans-serif;color:#14391F"><div style="width:100%;max-width:420px;text-align:center"><div style="font-size:48px">💍</div><h1 style="font-size:26px;margin:8px 0 6px;color:#14532D">MarryCAIndia</h1><p id="gp" style="font-size:16px;line-height:1.5;margin:0 0 18px">Checking your login...</p><div id="gf" style="display:none"><input id="ge" type="email" autocomplete="email" placeholder="Your registered email" style="width:100%;box-sizing:border-box;min-height:52px;font-size:17px;padding:0 14px;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F"><input id="gc" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" style="display:none;width:100%;box-sizing:border-box;min-height:56px;font-size:28px;letter-spacing:8px;text-align:center;border:1.5px solid #9DB39A;border-radius:12px;background:#fff;color:#14391F;margin-top:10px"><button id="gb" type="button" style="width:100%;margin-top:12px;min-height:52px;font-size:17px;font-weight:700;color:#14391F;background:#F4C542;border:0;border-radius:999px;cursor:pointer">Send code</button><p id="gm" style="margin:10px 0 0;font-size:15px;font-weight:600;min-height:22px;color:#B3261E"></p><p style="margin:14px 0 0;font-size:14px"><a href="index.html#join" style="color:#14532D">New here? Register free</a></p></div></div></div>
+<script>
+(function(){
+var U="https://script.google.com/macros/s/AKfycbx9fKvga31SzCbJziKa7ZGS0iEW-NHsy0utJVKXBKMhwIzWP7A39GCdZo6Vahr0KQn4wA/exec",g=function(i){return document.getElementById(i);},step=0;
+function api(q){return fetch(U+'?'+new URLSearchParams(q)).then(function(r){return r.json();});}
+function open_(){var e=g('gate');if(e)e.remove();}
+function ask(){g('gp').textContent='Log in with a code sent to your email.';g('gf').style.display='block';}
+var t='';try{t=localStorage.getItem('mci_tok')||'';}catch(x){}
+if(t){api({action:'check',token:t}).then(function(r){if(r.ok)open_();else{try{localStorage.removeItem('mci_tok');}catch(x){}ask();}}).catch(function(){g('gp').textContent='No internet. Please try again.';});}else ask();
+g('gb').onclick=function(){var m=g('gm'),em=g('ge').value.trim().toLowerCase(),b=g('gb');m.style.color='#B3261E';
+if(step===0){if(!em){m.textContent='Enter your email.';return;}b.disabled=true;
+api({action:'send',email:em,mode:'login'}).then(function(r){b.disabled=false;if(r.ok){step=1;g('gc').style.display='block';g('ge').readOnly=true;b.textContent='Verify and log in';m.style.color='#14532D';m.textContent='Code sent. Check your email (and Spam).';g('gc').focus();}else m.textContent=r.error||'Could not send.';}).catch(function(){b.disabled=false;m.textContent='No internet.';});}
+else{var c=g('gc').value.trim();if(c.length!==6){m.textContent='Enter the 6-digit code.';return;}b.disabled=true;
+api({action:'verify',email:em,code:c}).then(function(r){b.disabled=false;if(r.ok){try{localStorage.setItem('mci_tok',r.token);}catch(x){}open_();}else m.textContent=r.error||'Wrong code.';}).catch(function(){b.disabled=false;m.textContent='No internet.';});}};
+})();
+</script>
+
 <div id="app"></div>
 <div id="layer"></div>
 <script>
