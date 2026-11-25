@@ -351,6 +351,7 @@ details[open] .plus{transform:rotate(45deg)}
 <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
 <label style="flex:1 1 100%;display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45"><input id="consent" name="consent" type="checkbox" required style="width:22px;height:22px;margin:0;flex:none"><span>I agree that MarryCAIndia.com may store these details and contact me on WhatsApp or email about my profile.</span></label>
 <button id="send" type="submit" style="flex:1 1 100%;min-height:52px;padding:14px;font:inherit;font-size:17px;font-weight:700;color:#14391F;background:#F4C542;border:0;border-radius:999px;cursor:pointer">Start free for 30 days</button>
+<button id="havecode" type="button" style="flex:1 1 100%;background:none;border:0;color:#14532D;font:inherit;font-size:15px;text-decoration:underline;cursor:pointer;padding:4px">I already have a code</button>
 <p id="msg" role="status" aria-live="polite" style="flex:1 1 100%;margin:0;font-size:15px;font-weight:600;min-height:22px"></p>
 </form></div></div>
 <script>
@@ -383,6 +384,7 @@ document.getElementById('otpr').onclick=function(){api({action:'send',email:em,m
 setTimeout(function(){document.getElementById('otpc').focus();},50);
 }
 var form=document.getElementById('signup'),msg=document.getElementById('msg'),btn=document.getElementById('send');
+document.getElementById('havecode').addEventListener('click',function(){var em=document.getElementById('email').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){msg.style.color='#B3261E';msg.textContent='Type your email first.';return;}showOtp(em);});
 form.addEventListener('submit',function(e){
 e.preventDefault();
 msg.style.color='#B3261E';
@@ -394,9 +396,9 @@ fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:data}).then(function(){
 var em=document.getElementById('email').value.trim().toLowerCase();
 return api({action:'send',email:em,mode:'register'}).then(function(r){
 btn.disabled=false;btn.textContent='Start free for 30 days';
-if(!r.ok){msg.textContent=r.error||'Could not send code.';return;}
+if(!r.ok){if(/wait one minute/.test(r.error||'')){showOtp(em);return;}msg.textContent=r.error||'Could not send code.';return;}
 showOtp(em);});
-}).catch(function(){msg.textContent='Could not send. Check your internet and try again.';btn.disabled=false;btn.textContent='Start free for 30 days';});
+}).catch(function(er){msg.textContent='Could not send the code ('+(er&&er.message?er.message:'error')+'). Please tell us this message.';btn.disabled=false;btn.textContent='Start free for 30 days';});
 });
 })();
 </script>
