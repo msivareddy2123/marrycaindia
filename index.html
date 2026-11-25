@@ -50,6 +50,10 @@ details[open] .plus{transform:rotate(45deg)}
 
 <!-- Hero -->
 <style>
+.mci-foot{overflow-wrap:anywhere;word-break:break-word}
+.mci-foot>span{max-width:100%}
+@media(max-width:700px){.mci-foot{flex-direction:column;align-items:flex-start;padding:28px 18px 110px !important;gap:14px}.mci-foot>span{flex:none !important;width:100%}.mci-foot a{display:inline-block;padding:2px 0}}
+html,body{overflow-x:hidden}
 .mci-tick{background:#14532D;color:#FFFBEA;overflow:hidden;white-space:nowrap;padding:14px 0;border-top:3px solid #F4C542;border-bottom:3px solid #F4C542}
 .mci-track{display:inline-flex;animation:mciscroll 38s linear infinite;will-change:transform}
 .mci-tick:hover .mci-track{animation-play-state:paused}
@@ -392,7 +396,7 @@ details[open] .plus{transform:rotate(45deg)}
 </div>
 </section>
 
-<footer style="max-width:1200px;margin:0 auto;padding:32px 24px 48px;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;font-size:14px;color:#3F5A48">
+<footer class="mci-foot" style="max-width:1200px;margin:0 auto;padding:32px 24px 48px;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;font-size:14px;color:#3F5A48">
 <span style="display:flex;align-items:center;gap:10px"><span role="img" aria-label="Ring emoji logo" style="font-size:24px;line-height:1">💍</span>© 2026 MarryCAIndia.com. All rights reserved.</span>
 <span>Need help? <a href="mailto:support@marrycaindia.com" style="color:#14532D;font-weight:600;text-decoration:underline">support@marrycaindia.com</a></span>
 <span><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></span>
