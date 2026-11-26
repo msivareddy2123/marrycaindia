@@ -55,6 +55,7 @@ details[open] .plus{transform:rotate(45deg)}
 .mci-foot>span{max-width:100%}
 @media(max-width:700px){.mci-foot{flex-direction:column;align-items:flex-start;padding:28px 18px 110px !important;gap:14px}.mci-foot>span{flex:none !important;width:100%}.mci-foot a{display:inline-block;padding:2px 0}}
 html,body{overflow-x:hidden}
+.wchip{cursor:pointer;transition:transform .12s}.wchip:hover{transform:translateY(-2px)}.wchip:focus-visible{outline:3px solid #14532D;outline-offset:2px}
 .mci-tick{background:#14532D;color:#FFFBEA;overflow:hidden;white-space:nowrap;padding:14px 0;border-top:3px solid #F4C542;border-bottom:3px solid #F4C542}
 .mci-track{display:inline-flex;animation:mciscroll 38s linear infinite;will-change:transform}
 .mci-tick:hover .mci-track{animation-play-state:paused}
@@ -207,20 +208,20 @@ html,body{overflow-x:hidden}
 <div style="flex:1 1 480px;min-width:0;background:#FDF3B8;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:18px">
 <h3 style="margin:0;font-family:'Caveat',cursive;font-size:34px;font-weight:700;color:#14532D">Your profession</h3>
 <div style="display:flex;flex-wrap:wrap;gap:10px">
-<span style="padding:10px 20px;border-radius:999px;background:#2E8B57;color:#FFFFFF;font-weight:600">CA</span>
-<span style="padding:10px 20px;border-radius:999px;background:#2E8B57;color:#FFFFFF;font-weight:600">CMA</span>
-<span style="padding:10px 20px;border-radius:999px;background:#2E8B57;color:#FFFFFF;font-weight:600">CS</span>
-<span style="padding:10px 20px;border-radius:999px;background:#FFFFFF;border:2px solid #2E8B57;font-weight:600">Others, any profession</span>
+<span class="wchip" role="button" tabindex="0" data-p="CA" style="padding:10px 20px;border-radius:999px;background:#2E8B57;color:#FFFFFF;font-weight:600">CA</span>
+<span class="wchip" role="button" tabindex="0" data-p="CMA" style="padding:10px 20px;border-radius:999px;background:#2E8B57;color:#FFFFFF;font-weight:600">CMA</span>
+<span class="wchip" role="button" tabindex="0" data-p="CS" style="padding:10px 20px;border-radius:999px;background:#2E8B57;color:#FFFFFF;font-weight:600">CS</span>
+<span class="wchip" role="button" tabindex="0" data-p="Other" style="padding:10px 20px;border-radius:999px;background:#FFFFFF;border:2px solid #2E8B57;font-weight:600">Others, any profession</span>
 </div>
 <p style="margin:0;color:#2C4A35">Chartered Accountants, Cost and Management Accountants and Company Secretaries, plus everyone else: doctors, engineers, lawyers, bankers, business owners, teachers, government employees and any other profession.</p>
 </div>
 <div style="flex:1 1 480px;min-width:0;background:#FDF3B8;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:18px">
 <h3 style="margin:0;font-family:'Caveat',cursive;font-size:34px;font-weight:700;color:#14532D">Your stage</h3>
 <div style="display:flex;flex-wrap:wrap;gap:10px">
-<span style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Foundation</span>
-<span style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Intermediate</span>
-<span style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Final</span>
-<span style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Qualified</span>
+<span class="wchip" role="button" tabindex="0" data-p="CA" data-s="Foundation" style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Foundation</span>
+<span class="wchip" role="button" tabindex="0" data-p="CA" data-s="Intermediate" style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Intermediate</span>
+<span class="wchip" role="button" tabindex="0" data-p="CA" data-s="Final" style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Final</span>
+<span class="wchip" role="button" tabindex="0" data-p="CA" data-s="Qualified" style="padding:10px 20px;border-radius:999px;background:#E0483E;color:#FFFFFF;font-weight:600">Qualified</span>
 </div>
 <p style="margin:0;color:#2C4A35">Students and members at any level can create a profile. Parents and guardians can also register on behalf of a son or daughter.</p>
 </div>
@@ -465,6 +466,7 @@ document.getElementById('havecode').addEventListener('click',function(){var em=d
 var CB={'Myself':'self','Parent or guardian':'parent','Brother':'brother','Sister':'sister','Friend':'friend','Relative':'relative'};
 function togOther(){var o=document.getElementById('profession').value==='Other';document.getElementById('stagebox').style.display=o?'none':'contents';document.getElementById('othbox').style.display=o?'flex':'none';document.getElementById('profx').required=o;document.getElementById('qual').required=o;}
 document.getElementById('profession').addEventListener('change',togOther);togOther();
+document.querySelectorAll('.wchip').forEach(function(c){function go(ev){ev.preventDefault();openM();var pv=c.getAttribute('data-p'),st=c.getAttribute('data-s');var ps=document.getElementById('profession');if(pv)ps.value=pv;if(st)document.getElementById('stage').value=st;togOther();}c.addEventListener('click',go);c.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' ')go(ev);});});
 document.getElementById('pwshow').addEventListener('change',function(){document.getElementById('password').type=this.checked?'text':'password';});
 form.addEventListener('submit',function(e){
 e.preventDefault();
