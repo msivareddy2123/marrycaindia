@@ -55,6 +55,12 @@ details[open] .plus{transform:rotate(45deg)}
 .mci-foot>span{max-width:100%}
 @media(max-width:700px){.mci-foot{flex-direction:column;align-items:flex-start;padding:28px 18px 110px !important;gap:14px}.mci-foot>span{flex:none !important;width:100%}.mci-foot a{display:inline-block;padding:2px 0}}
 html,body{overflow-x:hidden}
+.hero-cards>div{flex:1 1 0 !important;min-width:0 !important;max-width:270px !important;padding:16px !important;gap:10px !important}
+.hero-cards>div:first-child{transform:rotate(-2deg) !important}.hero-cards>div:nth-child(2){transform:rotate(2deg) !important}
+.hero-cards>div p{font-size:13px !important;line-height:1.45 !important}
+.hero-cards>div span[style*="Caveat"]{font-size:21px !important}
+.chat-card .cb{font-size:13px}
+@media(max-width:860px){.hero-cards{flex-wrap:wrap !important;flex:1 1 100% !important}.hero-cards>div{flex:1 1 240px !important}.chat-sec{flex:1 1 100%;max-width:420px}}
 @media(max-width:900px){.hero-txt{align-items:center !important;text-align:center !important}.hero-txt div{justify-content:center !important}}
 .wchip{cursor:pointer;transition:transform .12s}.wchip:hover{transform:translateY(-2px)}.wchip:focus-visible{outline:3px solid #14532D;outline-offset:2px}
 .mci-tick{background:#14532D;color:#FFFBEA;overflow:hidden;white-space:nowrap;padding:14px 0;border-top:3px solid #F4C542;border-bottom:3px solid #F4C542}
@@ -116,7 +122,7 @@ html,body{overflow-x:hidden}
 
 <!-- sample cards -->
 <div class="hero-row" style="display:flex;flex-wrap:wrap;gap:32px;justify-content:center;align-items:flex-start;width:100%">
-<div class="hero-cards" style="position:relative;flex:1 1 620px;min-width:0;display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;padding:12px 0 8px">
+<div class="hero-cards" style="position:relative;flex:0 1 570px;min-width:0;display:flex;flex-wrap:nowrap;gap:28px;justify-content:center;align-items:flex-start;padding:12px 0 8px">
 <div style="flex:1 1 280px;max-width:340px;min-width:0;background:#FFFCEE;border-radius:26px;padding:22px;box-shadow:0 22px 40px -22px rgba(20,83,45,0.55);transform:rotate(-3deg);display:flex;flex-direction:column;gap:14px;text-align:left">
 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
 <span style="font-family:'Caveat',cursive;font-size:26px;font-weight:600;color:#14532D">say hello to</span>
@@ -187,15 +193,15 @@ html,body{overflow-x:hidden}
 
 <!-- Who can join -->
 <style>
-.chat-sec{flex:0 1 420px;max-width:440px;min-width:0;margin:0;padding:12px 0 0;text-align:center}
-.chat-sec h2{margin:0 0 8px;font-size:26px;line-height:1.15;font-weight:800;color:#14532D}
-.chat-sec p.sub{margin:0 auto 22px;max-width:560px;color:#3F5A48;font-size:16px}
+.chat-sec{flex:0 1 350px;max-width:360px;min-width:0;margin:0;padding:4px 0 0;text-align:center}
+.chat-sec h2{margin:0 0 6px;font-size:21px;line-height:1.15;font-weight:800;color:#14532D}
+.chat-sec p.sub{margin:0 auto 12px;max-width:340px;color:#3F5A48;font-size:13px;line-height:1.4}
 .chat-card{max-width:440px;margin:0 auto;background:#FFFCEE;border:2px solid #14532D;border-radius:24px;overflow:hidden;box-shadow:0 22px 40px -22px rgba(0,0,0,.45);text-align:left}
 .chat-top{display:flex;justify-content:space-between;align-items:center;background:#14532D;color:#FFFBEA;padding:12px 16px;gap:10px}
 .chat-p{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;line-height:1.2}
 .chat-p small{display:block;font-weight:500;font-size:12px;opacity:.85}
 .chat-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#14391F;flex:none}
-.chat-body{height:340px;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.chat-body{height:290px;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
 .cm{max-width:82%;display:flex;flex-direction:column;gap:2px;animation:cmin .35s ease both}
 .cm.cg{align-self:flex-start}.cm.cbm{align-self:flex-end;align-items:flex-end}
 .cn{font-size:12px;font-weight:700;color:#3F5A48;padding:0 6px}
