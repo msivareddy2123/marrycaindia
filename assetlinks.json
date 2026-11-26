@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.marrycaindia.twa",
-        "sha256_cert_fingerprints": ["7C:D5:E7:9F:93:89:B2:F3:A3:DD:7F:D7:0E:95:E3:34:06:02:FE:01:B4:62:5F:23:BF:EC:83:F1:35:BD:6F:FC"]
-      }
-    }]
