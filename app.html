@@ -355,7 +355,7 @@ tot+=3;ok+=(S.verify.icai==='verified'?1:0)+(S.verify.work!=='none'?1:0)+(S.veri
 function trust(){var t=15;if(S.verify.icai!=='none')t+=S.verify.icai==='verified'?40:20;if(S.verify.work!=='none')t+=15;if(S.verify.photo!=='none')t+=20;if(filled('family'))t+=10;return Math.min(100,t);}
 
 function ring(v,size,sw){size=size||56;sw=sw||6;var r=size/2-sw/2-1,c=2*Math.PI*r;return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+v+' percent"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--ln)" stroke-width="'+sw+'"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--gr2)" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+(c*v/100)+' '+c+'" transform="rotate(-90 '+size/2+' '+size/2+')"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="'+size*0.27+'" font-weight="800" fill="var(--ink)">'+v+'</text></svg>';}
-function badges(p){var b='';if(REAL.on){b+=p.wv?'<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>':'<span class="bdg w">Not institute-verified</span>';return b;}if(p.prof!=='Other')b+='<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>';else b+='<span class="bdg w">Not institute-verified</span>';if(p.wv)b+='<span class="bdg">'+I('brief',12)+'Work</span>';return b;}
+function badges(p){var b='';if(p&&p.sample)return '<span class="bdg c">Sample profile</span>';if(REAL.on){b+=p.wv?'<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>':'<span class="bdg w">Not institute-verified</span>';return b;}if(p.prof!=='Other')b+='<span class="bdg">'+I('shield',12)+'Verified '+p.prof+'</span>';else b+='<span class="bdg w">Not institute-verified</span>';if(p.wv)b+='<span class="bdg">'+I('brief',12)+'Work</span>';return b;}
 function stageTxt(p){if(!p.stage||p.stage==='Qualified'||p.stage==='Not applicable')return '';return STAGES.indexOf(p.stage)>-1?' '+p.stage:' · '+p.stage;}
 
 function pickCard(p){var c=compat(p).score,l=locked(p);return '<article class="pick" data-act="open" data-id="'+p.id+'" role="button" tabindex="0" aria-label="Open profile of '+esc(p.name)+'"><div class="ph'+(l?' blur':'')+'" style="background:'+grad(p)+'"><span class="av-i">'+ini(p.name)+'</span>'+photoTag(p)+'<span class="sc">'+c+'% match</span>'+(l?'<span class="lk">'+I('lock',14)+'Photo private</span>':'')+'<button class="hb'+(S.shortlist[p.id]!=null?' on':'')+'" data-act="short" data-id="'+p.id+'" aria-label="Shortlist '+esc(p.name)+'">'+I('heart',20)+'</button></div><div class="pb"><strong>'+esc(p.name)+', '+p.age+'</strong><span>'+p.city+' · '+p.prof+stageTxt(p)+'</span><span>'+esc(p.work)+'</span><div class="bd">'+badges(p)+'</div></div></article>';}
@@ -602,6 +602,9 @@ sbFrom('profiles').update({photo_path:path}).eq('id',REAL.uid).then(function(u){
 ACT.photo=function(){if(!REAL.on){toast('Photos work for real members. Log in with a real account.');return;}var i=document.getElementById('photofile');if(i)i.click();};
 ACT.rmphoto=function(){if(!REAL.on||!REAL.pp)return;var sb=sbx(),old=REAL.pp;sbFrom('profiles').update({photo_path:null}).eq('id',REAL.uid).then(function(u){if(u.error){toast(rerr(u.error));return;}REAL.pp='';sb.storage.from('photos').remove([old]);SH=[];drawSheets();render();toast('Photo removed');});};
 document.addEventListener('change',function(ev){var t=ev.target;if(REAL.on&&t&&t.dataset&&t.dataset.pv==='photo'){sbFrom('profiles').update({photo_vis:t.value==='open'?'open':'mutual'}).eq('id',REAL.uid).then(function(r){if(r.error)console.warn(r.error.message);});}});
+var SAMPLE_IDS=['w13','w14','w15','m11','m12','m13'];
+function isSample(id){return SAMPLE_IDS.indexOf(id)>=0;}
+function sampleList(){var out=[];RAW.forEach(function(r){var a=r.split('|');if(!isSample(a[0]))return;var c=CITIES[+a[5]];out.push({id:a[0],name:a[1],g:a[2],age:+a[3],ht:+a[4],city:c[0],state:c[1],prof:a[6],stage:a[7],work:a[8],native:'',occ:'',income:a[9],comm:a[10],lang:a[11],rel:a[12],diet:a[13],ints:a[14].split(','),open:true,act:0,pp:'',wv:false,bio:'This is a sample profile that shows how profiles look. Real members will appear here.',sample:true});});return out;}
 function mapProf(r){return{id:r.id,name:r.name,g:r.gender,age:r.age,ht:r.height_in||66,city:r.city||'',state:r.state||'',prof:r.profession||'Other',stage:r.stage||'',work:r.work||'',native:r.native||'',occ:r.occ||'',income:r.income||'',comm:r.community||'',lang:r.language||'',rel:r.religion||'',diet:r.diet||'',ints:r.interests||[],open:r.photo_vis==='open',act:0,pp:r.photo_path||'',wv:!!r.verified,bio:r.bio||''};}
 function stub(id,nm){return{id:id,name:nm||'Member',g:oppo(),age:0,ht:66,city:'',state:'',prof:'Other',stage:'',work:'',income:'',comm:'',lang:'',rel:'',diet:'',ints:[],open:false,act:99,wv:false,bio:'',stub:true};}
 function rerr(er){var m=(er&&er.message)||'';if(er&&er.code==='23505')return 'Already done.';if(/row-level security|violates/i.test(m))return 'Not allowed. Your free trial may have ended, or this member is no longer available.';return 'Something went wrong. Please try again.';}
@@ -619,7 +622,7 @@ Promise.all([sb.from('profiles').select('*').neq('id',REAL.uid).limit(1000),sb.f
 REAL.busy=false;
 for(var i=0;i<rs.length;i++){if(rs[i].error){console.warn(rs[i].error.message);if(first)toast('Could not load members. Pull to refresh.');return;}}
 var uid=REAL.uid,pr=rs[0].data||[],it=rs[1].data||[],ms=rs[2].data||[],sl=rs[3].data||[],bl=rs[4].data||[],ct=rs[5].data||[];
-PROFILES=pr.map(mapProf);
+PROFILES=pr.map(mapProf);if(PROFILES.length<10)PROFILES=PROFILES.concat(sampleList());
 var oldRec=S.received||{},sent={},rec={},newKnown={};
 it.forEach(function(x){
 if(x.from_id===uid){sent[x.to_id]={note:x.note||'',status:x.status,at:Date.parse(x.created_at)};}
@@ -680,6 +683,7 @@ sbFrom('reports').insert({reporter:REAL.uid,reported:id,reason:'Reported from th
 
 seed();render();if(!S.setup&&!window.MCI_AUTH)openSetup();
 if(window.__mciProf)window.mciBoot(window.__mciProf,window.__mciUser);
+['sendint','dosend','short','savenote','chat','reqphoto','blockit','reportit','sendmsg','quick'].forEach(function(n){var f=ACT[n];if(!f)return;ACT[n]=function(e){var id=e&&e.dataset&&e.dataset.id;if(REAL.on&&id&&isSample(id)){toast('This is a sample profile. Real members will appear here soon.');return;}return f.apply(this,arguments);};});
 </script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})})}</script></body>
 </html>
